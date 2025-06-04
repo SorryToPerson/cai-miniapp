@@ -1,8 +1,8 @@
 {
   "miniprogramRoot": "./dist",
-  "projectname": "myTaroApp",
-  "description": "demo",
-  "appid": "touristappid",
+  "projectname": "cai-miniapp",
+  "description": "菜就多炼",
+  "appid": "wx4902a0813a4cb2ff",
   "setting": {
     "urlCheck": true,
     "es6": false,
