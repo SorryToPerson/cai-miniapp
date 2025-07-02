@@ -1,7 +1,7 @@
 {
-  "miniprogramRoot": "./dist",
-  "projectname": "cai-miniapp",
-  "description": "菜就多炼",
+  "miniprogramRoot": "dist/",
+  "projectname": "myApp",
+  "description": "",
   "appid": "wx4902a0813a4cb2ff",
   "setting": {
     "urlCheck": true,
@@ -9,7 +9,17 @@
     "enhance": false,
     "compileHotReLoad": false,
     "postcss": false,
-    "minified": false
+    "preloadBackgroundData": false,
+    "minified": false,
+    "newFeature": true,
+    "autoAudits": false,
+    "coverView": true,
+    "showShadowRootInWxmlPanel": false,
+    "scopeDataCheck": false,
+    "useCompilerModule": false
   },
-  "compileType": "miniprogram"
+  "compileType": "miniprogram",
+  "simulatorType": "wechat",
+  "simulatorPluginLibVersion": {},
+  "condition": {}
 }
