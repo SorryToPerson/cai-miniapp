@@ -32,12 +32,12 @@ function Index() {
   const add = () => {
     const time = new Date().toLocaleTimeString([], { hour12: false });
     const newList = [
-      ...list,
       {
         type: value[0],
         ml: value[1],
         time: time,
       },
+      ...list,
     ];
     setList(newList);
     Taro.setStorageSync(curDay, newList);
@@ -110,6 +110,7 @@ function Index() {
 
         <ScrollView
           className="list"
+          scrollWithAnimation
           style={{
             marginTop: 10,
             scrollbarWidth: "none",
