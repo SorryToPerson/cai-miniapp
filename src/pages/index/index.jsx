@@ -14,6 +14,7 @@ import Taro from "@tarojs/taro";
 import TimeShow from "../../components/TimeShow";
 import DatePicker from "../../components/DatePicker";
 import { typeList, mlList } from "./const";
+import { getTimeDiffStr } from "../../utils/time";
 import dayjs from "dayjs";
 import "./index.less";
 
@@ -39,7 +40,7 @@ function Index() {
         ml: value[1],
         startTime: startTime,
         endTime: time,
-        interval: dayjs(startTime).diff(dayjs(time), "minute"),
+        interval: getTimeDiffStr(startTime, time),
       },
       ...list,
     ];
@@ -133,20 +134,16 @@ function Index() {
                 <View>{dayjs(item.endTime).format("HH:mm:ss")}</View>
               </View>
               <View className="item-ml">
-                <View>{item.ml}</View>
-                {list[i - 1]?.startTime && (
+                <Tag type="warning">间隔:{item.interval}min</Tag>
+                {list[i + 1]?.startTime && (
                   <Tag background="#4d6def" color="#fff" size="small">
                     距离上一次:
-                    {dayjs(item.startTime).diff(
-                      dayjs(list[i - 1].startTime),
-                      "minute"
-                    )}
-                    h
+                    {getTimeDiffStr(list[i + 1].startTime, item.startTime)}
                   </Tag>
                 )}
               </View>
               <View className="item-action">
-                <Tag type="primary">{item.interval}min</Tag>
+                <Tag type="primary">{item.ml}</Tag>
                 <Tag background={item.type === "母乳" ? "#51c14b" : "orange"}>
                   {item.type}
                 </Tag>
