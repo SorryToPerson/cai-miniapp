@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, ScrollView } from "@tarojs/components";
 import {
   Cell,
@@ -12,16 +12,18 @@ import {
 import { Plus, MaskClose } from "@nutui/icons-react-taro";
 import Taro from "@tarojs/taro";
 import TimeShow from "../../components/TimeShow";
+import DatePicker from "../../components/DatePicker";
 import { typeList, mlList } from "./const";
+import dayjs from "dayjs";
 import "./index.less";
 
 function Index() {
   const windowInfo = Taro.getWindowInfo();
   const menuButtonInfo = Taro.getMenuButtonBoundingClientRect();
-
+  const [curDay, setCurDay] = useState(dayjs().format("YYYY/MM/DD"));
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState(["母乳", "50ml"]);
-  const [list, setList] = useState(Taro.getStorageSync("list") || []);
+  const [list, setList] = useState([]);
 
   const show = () => {
     setVisible(true);
@@ -38,7 +40,7 @@ function Index() {
       },
     ];
     setList(newList);
-    Taro.setStorageSync("list", newList);
+    Taro.setStorageSync(curDay, newList);
     setVisible(false);
   };
 
@@ -46,8 +48,15 @@ function Index() {
     const newList = [...list];
     newList.splice(index, 1);
     setList(newList);
-    Taro.setStorageSync("list", newList);
+    Taro.setStorageSync(curDay, newList);
   };
+
+  useEffect(() => {
+    if (curDay) {
+      const list = Taro.getStorageSync(curDay) || [];
+      setList(list);
+    }
+  }, [curDay]);
 
   return (
     <ConfigProvider
@@ -74,13 +83,35 @@ function Index() {
             textAlign: "center",
           }}
         >
-          {new Date().toLocaleDateString()}
+          {curDay}
+        </View>
+
+        <View
+          style={{
+            marginTop: 10,
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <DatePicker
+            value={curDay}
+            onChange={(value) => {
+              setCurDay(value);
+            }}
+          />
+          <View>
+            母乳：{list.filter((item) => item.type === "母乳")?.length}
+          </View>
+          <View>
+            奶粉：{list.filter((item) => item.type === "奶粉")?.length}
+          </View>
+          <View>总计：{list?.length}</View>
         </View>
 
         <ScrollView
           className="list"
           style={{
-            marginTop: 20,
+            marginTop: 10,
             scrollbarWidth: "none",
             height:
               windowInfo.safeArea.height -
@@ -94,7 +125,7 @@ function Index() {
               <View className="item">{item.time}</View>
               <View className="item">{item.ml}</View>
               <View className="item action">
-                <Tag type={item.type === "母乳" ? "primary" : "info"}>
+                <Tag background={item.type === "母乳" ? "#51c14b" : "orange"}>
                   {item.type}
                 </Tag>
                 <MaskClose color="gray" onClick={() => remove(i)} />
