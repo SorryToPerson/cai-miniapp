@@ -134,10 +134,10 @@ function Index() {
                 <View>{dayjs(item.endTime).format("HH:mm:ss")}</View>
               </View>
               <View className="item-ml">
-                <Tag type="warning">间隔:{item.interval}min</Tag>
+                <Tag type="warning">间隔：{item.interval}</Tag>
                 {list[i + 1]?.startTime && (
                   <Tag background="#4d6def" color="#fff" size="small">
-                    距离上一次:
+                    距离上一次：
                     {getTimeDiffStr(list[i + 1].startTime, item.startTime)}
                   </Tag>
                 )}
