@@ -1,7 +1,40 @@
-.nutui-react-demo {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.container {
+  box-sizing: border-box;
+  background-color: #e7eabf;
+  .list {
+    box-sizing: border-box;
+    padding: 0 20px;
+  }
+
+  .list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+
+    .action {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+
+  .add {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #436ef8;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+  }
+
+  .popup {
+    padding: 20px;
+  }
 }
