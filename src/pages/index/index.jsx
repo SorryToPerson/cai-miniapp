@@ -9,7 +9,7 @@ import {
   SafeArea,
   Tag,
 } from "@nutui/nutui-react-taro";
-import { Plus, MaskClose } from "@nutui/icons-react-taro";
+import { Plus, MaskClose, PlayCircleFill } from "@nutui/icons-react-taro";
 import Taro from "@tarojs/taro";
 import TimeShow from "../../components/TimeShow";
 import DatePicker from "../../components/DatePicker";
@@ -24,18 +24,22 @@ function Index() {
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState(["母乳", "50ml"]);
   const [list, setList] = useState([]);
+  const [startTime, setStartTime] = useState("");
 
   const show = () => {
     setVisible(true);
+    setStartTime(dayjs().format("YYYY-MM-DD HH:mm:ss"));
   };
 
   const add = () => {
-    const time = new Date().toLocaleTimeString([], { hour12: false });
+    const time = dayjs().format("YYYY-MM-DD HH:mm:ss");
     const newList = [
       {
         type: value[0],
         ml: value[1],
-        time: time,
+        startTime: startTime,
+        endTime: time,
+        interval: dayjs(startTime).diff(dayjs(time), "minute"),
       },
       ...list,
     ];
@@ -123,9 +127,26 @@ function Index() {
         >
           {list.map((item, i) => (
             <Cell key={i} className="list-item">
-              <View className="item">{item.time}</View>
-              <View className="item">{item.ml}</View>
-              <View className="item action">
+              <View className="item-time">
+                <View>{dayjs(item.startTime).format("HH:mm:ss")}</View>
+                <View>~</View>
+                <View>{dayjs(item.endTime).format("HH:mm:ss")}</View>
+              </View>
+              <View className="item-ml">
+                <View>{item.ml}</View>
+                {list[i - 1]?.startTime && (
+                  <Tag background="#4d6def" color="#fff" size="small">
+                    距离上一次:
+                    {dayjs(item.startTime).diff(
+                      dayjs(list[i - 1].startTime),
+                      "minute"
+                    )}
+                    h
+                  </Tag>
+                )}
+              </View>
+              <View className="item-action">
+                <Tag type="primary">{item.interval}min</Tag>
                 <Tag background={item.type === "母乳" ? "#51c14b" : "orange"}>
                   {item.type}
                 </Tag>
@@ -138,8 +159,8 @@ function Index() {
         <View className="add" onClick={show}>
           <Plus size={40} />
         </View>
+
         <Popup
-          title="添加时间点"
           position="bottom"
           visible={visible}
           onClose={() => {
@@ -147,7 +168,7 @@ function Index() {
           }}
         >
           <View className="popup">
-            <TimeShow />
+            <TimeShow startTime={startTime} />
             <PickerView
               value={value}
               options={[
