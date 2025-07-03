@@ -20,6 +20,7 @@ import {
 import Taro from "@tarojs/taro";
 import TimeShow from "../../components/TimeShow";
 import DatePicker from "../../components/DatePicker";
+import ChooseMl from "../../components/ChooseMl";
 import { typeList, mlList, mlMap } from "./const";
 import { getTimeDiffStr } from "../../utils/time";
 import dayjs from "dayjs";
@@ -180,14 +181,21 @@ function Index() {
               onChange={(value) => setType(value)}
               options={typeList.map((item) => ({ label: item, value: item }))}
             />
-            <Range
-              min={30}
-              max={240}
-              step={10}
-              value={ml}
-              onChange={(value) => setMl(value)}
-              style={{ marginTop: 20, marginBottom: 20 }}
-            />
+            <ChooseMl value={ml} onChange={(value) => setMl(value)} />
+
+            {/* <Cell
+              style={{
+                padding: "40px 18px",
+              }}
+            >
+              <Range
+                min={30}
+                max={240}
+                step={10}
+                value={ml}
+                onChange={(value) => setMl(value)}
+              />
+            </Cell> */}
 
             {/* <PickerView
               value={value}
