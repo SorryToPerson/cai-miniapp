@@ -1,9 +1,28 @@
-.container {
-  box-sizing: border-box;
+.page-container {
   background-color: #e7eabf;
-  .list {
-    box-sizing: border-box;
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  height: 100vh;
+
+  .header {
+    flex-shrink: 0;
+  }
+
+  .stats {
+    flex-shrink: 0;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .list-container {
+    flex: 1;
+    margin-top: 10px;
     padding: 0 20px;
+    overflow-y: auto;
+    box-sizing: border-box;
   }
 
   .list-item {
@@ -14,7 +33,7 @@
 
     .item-time {
       height: 100%;
-      font-size: 12px;
+      font-size: 16px;
       line-height: 1;
       display: flex;
       flex-direction: column;
@@ -54,6 +73,7 @@
     position: fixed;
     right: 40px;
     bottom: 40px;
+    z-index: 100;
   }
 
   .popup {

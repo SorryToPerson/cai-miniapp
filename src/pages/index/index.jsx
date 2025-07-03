@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, ScrollView } from "@tarojs/components";
+import { View } from "@tarojs/components";
 import {
   Cell,
   ConfigProvider,
@@ -71,15 +71,15 @@ function Index() {
         nutuiColorPrimaryStop2: "#4d6def",
       }}
     >
+      <SafeArea position="top" />
       <View
-        className="container"
+        className="page-container"
         style={{
-          paddingTop: menuButtonInfo.top,
-          paddingBottom: windowInfo.safeArea.bottom,
-          height: windowInfo.windowHeight,
+          paddingTop: `${menuButtonInfo.top}px`,
         }}
       >
         <View
+          className="header"
           style={{
             height: menuButtonInfo.height,
             lineHeight: menuButtonInfo.height + "px",
@@ -91,13 +91,7 @@ function Index() {
           {curDay}
         </View>
 
-        <View
-          style={{
-            marginTop: 10,
-            display: "flex",
-            justifyContent: "space-evenly",
-          }}
-        >
+        <View className="stats">
           <DatePicker
             value={curDay}
             onChange={(value) => {
@@ -113,19 +107,7 @@ function Index() {
           <View>总计：{list?.length}</View>
         </View>
 
-        <ScrollView
-          className="list"
-          scrollWithAnimation
-          style={{
-            marginTop: 10,
-            scrollbarWidth: "none",
-            height:
-              windowInfo.safeArea.height -
-              menuButtonInfo.height -
-              windowInfo.safeArea.top,
-          }}
-          scrollY
-        >
+        <View className="list-container">
           {list.map((item, i) => (
             <Cell key={i} className="list-item">
               <View className="item-time">
@@ -136,7 +118,7 @@ function Index() {
               <View className="item-ml">
                 <Tag type="warning">间隔：{item.interval}</Tag>
                 {list[i + 1]?.startTime && (
-                  <Tag background="#4d6def" color="#fff" size="small">
+                  <Tag background="#4d6def" color="#fff">
                     距离上一次：
                     {getTimeDiffStr(list[i + 1].startTime, item.startTime)}
                   </Tag>
@@ -144,14 +126,18 @@ function Index() {
               </View>
               <View className="item-action">
                 <Tag type="primary">{item.ml}</Tag>
-                <Tag background={item.type === "母乳" ? "#51c14b" : "orange"}>
+                <Tag
+                  mark
+                  plain
+                  background={item.type === "母乳" ? "#51c14b" : "orange"}
+                >
                   {item.type}
                 </Tag>
                 <MaskClose color="gray" onClick={() => remove(i)} />
               </View>
             </Cell>
           ))}
-        </ScrollView>
+        </View>
 
         <View className="add" onClick={show}>
           <Plus size={40} />
@@ -183,6 +169,8 @@ function Index() {
             <SafeArea position="bottom" />
           </View>
         </Popup>
+
+        <SafeArea position="bottom" />
       </View>
     </ConfigProvider>
   );
