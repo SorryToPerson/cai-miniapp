@@ -9,7 +9,12 @@ import {
   SafeArea,
   Tag,
 } from "@nutui/nutui-react-taro";
-import { Plus, MaskClose, PlayCircleFill } from "@nutui/icons-react-taro";
+import {
+  Plus,
+  MaskClose,
+  ArrowLeftSmall,
+  ArrowRightSmall,
+} from "@nutui/icons-react-taro";
 import Taro from "@tarojs/taro";
 import TimeShow from "../../components/TimeShow";
 import DatePicker from "../../components/DatePicker";
@@ -19,7 +24,6 @@ import dayjs from "dayjs";
 import "./index.less";
 
 function Index() {
-  const windowInfo = Taro.getWindowInfo();
   const menuButtonInfo = Taro.getMenuButtonBoundingClientRect();
   const [curDay, setCurDay] = useState(dayjs().format("YYYY/MM/DD"));
   const [visible, setVisible] = useState(false);
@@ -28,11 +32,17 @@ function Index() {
   const [startTime, setStartTime] = useState("");
 
   const show = () => {
+    Taro.vibrateShort({
+      type: "medium",
+    });
     setVisible(true);
     setStartTime(dayjs().format("YYYY-MM-DD HH:mm:ss"));
   };
 
   const add = () => {
+    Taro.vibrateShort({
+      type: "medium",
+    });
     const time = dayjs().format("YYYY-MM-DD HH:mm:ss");
     const newList = [
       {
@@ -83,12 +93,19 @@ function Index() {
           style={{
             height: menuButtonInfo.height,
             lineHeight: menuButtonInfo.height + "px",
-            fontSize: 16,
-            fontWeight: "bold",
-            textAlign: "center",
           }}
         >
+          <ArrowLeftSmall
+            onClick={() => {
+              setCurDay(dayjs(curDay).subtract(1, "day").format("YYYY/MM/DD"));
+            }}
+          />
           {curDay}
+          <ArrowRightSmall
+            onClick={() => {
+              setCurDay(dayjs(curDay).add(1, "day").format("YYYY/MM/DD"));
+            }}
+          />
         </View>
 
         <View className="stats">
@@ -163,7 +180,7 @@ function Index() {
               }}
             />
 
-            <Button block type="primary" onClick={add}>
+            <Button block type="primary" onClick={add} size="large">
               提交
             </Button>
             <SafeArea position="bottom" />
