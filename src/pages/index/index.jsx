@@ -8,6 +8,8 @@ import {
   Popup,
   SafeArea,
   Tag,
+  Radio,
+  Range,
 } from "@nutui/nutui-react-taro";
 import {
   Plus,
@@ -18,7 +20,7 @@ import {
 import Taro from "@tarojs/taro";
 import TimeShow from "../../components/TimeShow";
 import DatePicker from "../../components/DatePicker";
-import { typeList, mlList } from "./const";
+import { typeList, mlList, mlMap } from "./const";
 import { getTimeDiffStr } from "../../utils/time";
 import dayjs from "dayjs";
 import "./index.less";
@@ -30,6 +32,8 @@ function Index() {
   const [value, setValue] = useState(["母乳", "50ml"]);
   const [list, setList] = useState([]);
   const [startTime, setStartTime] = useState("");
+  const [type, setType] = useState("母乳");
+  const [ml, setMl] = useState(60);
 
   const show = () => {
     Taro.vibrateShort({
@@ -46,8 +50,8 @@ function Index() {
     const time = dayjs().format("YYYY-MM-DD HH:mm:ss");
     const newList = [
       {
-        type: value[0],
-        ml: value[1],
+        type: type,
+        ml: ml + "ml",
         startTime: startTime,
         endTime: time,
         interval: getTimeDiffStr(startTime, time),
@@ -169,7 +173,23 @@ function Index() {
         >
           <View className="popup">
             <TimeShow startTime={startTime} />
-            <PickerView
+            <Radio.Group
+              direction="horizontal"
+              value={type}
+              shape="button"
+              onChange={(value) => setType(value)}
+              options={typeList.map((item) => ({ label: item, value: item }))}
+            />
+            <Range
+              min={30}
+              max={240}
+              step={10}
+              value={ml}
+              onChange={(value) => setMl(value)}
+              style={{ marginTop: 20, marginBottom: 20 }}
+            />
+
+            {/* <PickerView
               value={value}
               options={[
                 typeList.map((item) => ({ label: item, value: item })),
@@ -178,7 +198,7 @@ function Index() {
               onChange={({ value }) => {
                 setValue(value);
               }}
-            />
+            /> */}
 
             <Button block type="primary" onClick={add} size="large">
               提交
