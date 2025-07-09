@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View } from "@tarojs/components";
+import { Image, View } from "@tarojs/components";
 import {
   Cell,
   ConfigProvider,
@@ -9,7 +9,7 @@ import {
   SafeArea,
   Tag,
   Radio,
-  Range,
+  Empty,
 } from "@nutui/nutui-react-taro";
 import {
   Plus,
@@ -24,6 +24,7 @@ import ChooseMl from "../../components/ChooseMl";
 import { typeList, mlList, mlMap } from "./const";
 import { getTimeDiffStr } from "../../utils/time";
 import dayjs from "dayjs";
+import nullImage from "./null.svg";
 import "./index.less";
 
 function Index() {
@@ -62,6 +63,12 @@ function Index() {
       },
       ...list,
     ];
+
+    const timeInterval = getTimeDiffStr(
+      startTime,
+      dayjs().format("YYYY-MM-DD HH:mm:ss")
+    );
+    setTime(timeInterval);
     setD3(false);
     setList(newList);
     Taro.setStorageSync(curDay, newList);
@@ -153,50 +160,63 @@ function Index() {
 
         {time && <View className="time-interval">距离最近一次：{time}</View>}
 
-        <View className="list-container">
-          {list.map((item, i) => (
-            <Cell key={i} className="list-item">
-              <View className="item-top">
-                <View className="item-time">
-                  {dayjs(item.endTime).format("HH:mm:ss")}
-                </View>
-                <View className="item-ml">
-                  {list[i + 1]?.startTime && (
-                    <Tag background="#4d6def" color="#fff">
-                      {getTimeDiffStr(list[i + 1].startTime, item.startTime)}
+        {list.length ? (
+          <View className="list-container">
+            {list.map((item, i) => (
+              <Cell key={i} className="list-item">
+                <View className="item-top">
+                  <View className="item-time">
+                    {dayjs(item.endTime).format("HH:mm:ss")}
+                  </View>
+                  <View className="item-ml">
+                    {list[i + 1]?.startTime && (
+                      <Tag background="#4d6def" color="#fff">
+                        {getTimeDiffStr(list[i + 1].startTime, item.startTime)}
+                      </Tag>
+                    )}
+                  </View>
+                  <View className="item-action">
+                    <Tag type="primary">{item.ml}</Tag>
+                    <Tag
+                      mark
+                      plain
+                      background={item.type === "母乳" ? "#51c14b" : "orange"}
+                    >
+                      {item.type}
                     </Tag>
-                  )}
+                    <MaskClose color="gray" onClick={() => remove(i)} />
+                  </View>
                 </View>
-                <View className="item-action">
-                  <Tag type="primary">{item.ml}</Tag>
-                  <Tag
-                    mark
-                    plain
-                    background={item.type === "母乳" ? "#51c14b" : "orange"}
-                  >
-                    {item.type}
+                <View className="time-bottom">
+                  <View className="left">
+                    <View>{dayjs(item.startTime).format("HH:mm:ss")}</View>
+                    <View>-</View>
+                    <View>{dayjs(item.endTime).format("HH:mm:ss")}</View>
+                  </View>
+
+                  <View className="flex-1">
+                    {item.d3 && <Tag background="#cc13ff">d3</Tag>}
+                  </View>
+
+                  <Tag className="flex-1" type="warning">
+                    间隔：{item.interval}
                   </Tag>
-                  <MaskClose color="gray" onClick={() => remove(i)} />
                 </View>
-              </View>
-              <View className="time-bottom">
-                <View className="left">
-                  <View>{dayjs(item.startTime).format("HH:mm:ss")}</View>
-                  <View>-</View>
-                  <View>{dayjs(item.endTime).format("HH:mm:ss")}</View>
-                </View>
-
-                <View className="flex-1">
-                  {item.d3 && <Tag background="#cc13ff">d3</Tag>}
-                </View>
-
-                <Tag className="flex-1" type="warning">
-                  间隔：{item.interval}
-                </Tag>
-              </View>
-            </Cell>
-          ))}
-        </View>
+              </Cell>
+            ))}
+          </View>
+        ) : (
+          <View className="empty">
+            <Image
+              style={{
+                width: "80px",
+                height: "80px",
+              }}
+              src={nullImage}
+            ></Image>
+            <View>今天还没有记录哦</View>
+          </View>
+        )}
 
         <View className="add" onClick={show}>
           <Plus size={40} />
