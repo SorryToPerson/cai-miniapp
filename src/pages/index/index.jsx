@@ -97,6 +97,8 @@ function Index() {
           dayjs().format("YYYY-MM-DD HH:mm:ss")
         );
         setTime(timeInterval);
+      } else {
+        setTime("");
       }
     }, 1000);
 
@@ -195,7 +197,7 @@ function Index() {
                   </View>
 
                   <View className="flex-1">
-                    {item.d3 && <Tag background="#cc13ff">d3</Tag>}
+                    {item.d3 && <Tag background="#cc13ff">D3</Tag>}
                   </View>
 
                   <Tag className="flex-1" type="warning">
