@@ -112,7 +112,7 @@ function Index() {
         nutuiColorPrimaryStop1: "#4d6def",
         nutuiColorPrimaryStop2: "#4d6def",
         nutuiSwitchActiveBackgroundColor: "#4d6def",
-        nutuiSwitchHeight: "20px",
+        // nutuiSwitchHeight: "20px",
         nutuiTagFontSize: "12px",
       }}
     >
