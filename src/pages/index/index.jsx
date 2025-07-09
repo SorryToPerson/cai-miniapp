@@ -4,7 +4,7 @@ import {
   Cell,
   ConfigProvider,
   Button,
-  PickerView,
+  Switch,
   Popup,
   SafeArea,
   Tag,
@@ -35,6 +35,8 @@ function Index() {
   const [startTime, setStartTime] = useState("");
   const [type, setType] = useState("母乳");
   const [ml, setMl] = useState(60);
+  const [d3, setD3] = useState(false);
+  const [time, setTime] = useState();
 
   const show = () => {
     Taro.vibrateShort({
@@ -54,11 +56,13 @@ function Index() {
         type: type,
         ml: ml + "ml",
         startTime: startTime,
+        d3: d3,
         endTime: time,
         interval: getTimeDiffStr(startTime, time),
       },
       ...list,
     ];
+    setD3(false);
     setList(newList);
     Taro.setStorageSync(curDay, newList);
     setVisible(false);
@@ -78,12 +82,29 @@ function Index() {
     }
   }, [curDay]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (list[0]) {
+        const timeInterval = getTimeDiffStr(
+          list[0].startTime,
+          dayjs().format("YYYY-MM-DD HH:mm:ss")
+        );
+        setTime(timeInterval);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [list]);
+
   return (
     <ConfigProvider
       theme={{
         nutuiColorPrimaryIcon: "#4d6def",
         nutuiColorPrimaryStop1: "#4d6def",
         nutuiColorPrimaryStop2: "#4d6def",
+        nutuiSwitchActiveBackgroundColor: "#4d6def",
+        nutuiSwitchHeight: "20px",
+        nutuiTagFontSize: "12px",
       }}
     >
       <SafeArea position="top" />
@@ -113,7 +134,7 @@ function Index() {
           />
         </View>
 
-        <View className="stats">
+        <View className="status">
           <DatePicker
             value={curDay}
             onChange={(value) => {
@@ -127,35 +148,51 @@ function Index() {
             奶粉：{list.filter((item) => item.type === "奶粉")?.length}
           </View>
           <View>总计：{list?.length}</View>
+          <View>D3：{list.filter((item) => item.d3)?.length}</View>
         </View>
+
+        {time && <View className="time-interval">距离最近一次：{time}</View>}
 
         <View className="list-container">
           {list.map((item, i) => (
             <Cell key={i} className="list-item">
-              <View className="item-time">
-                <View>{dayjs(item.startTime).format("HH:mm:ss")}</View>
-                <View>~</View>
-                <View>{dayjs(item.endTime).format("HH:mm:ss")}</View>
-              </View>
-              <View className="item-ml">
-                <Tag type="warning">间隔：{item.interval}</Tag>
-                {list[i + 1]?.startTime && (
-                  <Tag background="#4d6def" color="#fff">
-                    距离上一次：
-                    {getTimeDiffStr(list[i + 1].startTime, item.startTime)}
+              <View className="item-top">
+                <View className="item-time">
+                  {dayjs(item.endTime).format("HH:mm:ss")}
+                </View>
+                <View className="item-ml">
+                  {list[i + 1]?.startTime && (
+                    <Tag background="#4d6def" color="#fff">
+                      {getTimeDiffStr(list[i + 1].startTime, item.startTime)}
+                    </Tag>
+                  )}
+                </View>
+                <View className="item-action">
+                  <Tag type="primary">{item.ml}</Tag>
+                  <Tag
+                    mark
+                    plain
+                    background={item.type === "母乳" ? "#51c14b" : "orange"}
+                  >
+                    {item.type}
                   </Tag>
-                )}
+                  <MaskClose color="gray" onClick={() => remove(i)} />
+                </View>
               </View>
-              <View className="item-action">
-                <Tag type="primary">{item.ml}</Tag>
-                <Tag
-                  mark
-                  plain
-                  background={item.type === "母乳" ? "#51c14b" : "orange"}
-                >
-                  {item.type}
+              <View className="time-bottom">
+                <View className="left">
+                  <View>{dayjs(item.startTime).format("HH:mm:ss")}</View>
+                  <View>-</View>
+                  <View>{dayjs(item.endTime).format("HH:mm:ss")}</View>
+                </View>
+
+                <View className="flex-1">
+                  {item.d3 && <Tag background="#cc13ff">d3</Tag>}
+                </View>
+
+                <Tag className="flex-1" type="warning">
+                  间隔：{item.interval}
                 </Tag>
-                <MaskClose color="gray" onClick={() => remove(i)} />
               </View>
             </Cell>
           ))}
@@ -174,6 +211,11 @@ function Index() {
         >
           <View className="popup">
             <TimeShow startTime={startTime} />
+            <Switch
+              activeText="D3"
+              checked={d3}
+              onChange={(val) => setD3(val)}
+            />
             <Radio.Group
               direction="horizontal"
               value={type}
@@ -209,7 +251,7 @@ function Index() {
             /> */}
 
             <Button block type="primary" onClick={add} size="large">
-              提交
+              确认
             </Button>
             <SafeArea position="bottom" />
           </View>

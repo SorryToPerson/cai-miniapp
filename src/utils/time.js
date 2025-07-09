@@ -14,14 +14,14 @@ export function getTimeDiffStr(start, end) {
   if (diffSeconds < 0) diffSeconds += 24 * 60 * 60;
 
   if (diffSeconds < 60) {
-    return `${diffSeconds}s`;
+    return `${diffSeconds}秒`;
   } else if (diffSeconds < 3600) {
     const minutes = Math.floor(diffSeconds / 60);
     const seconds = diffSeconds % 60;
-    return seconds === 0 ? `${minutes}m` : `${minutes}m${seconds}s`;
+    return seconds === 0 ? `${minutes}分` : `${minutes}分${seconds}秒`;
   } else {
     const hours = Math.floor(diffSeconds / 3600);
     const minutes = Math.floor((diffSeconds % 3600) / 60);
-    return minutes === 0 ? `${hours}h` : `${hours}h${minutes}m`;
+    return minutes === 0 ? `${hours}时` : `${hours}时${minutes}分`;
   }
 }
