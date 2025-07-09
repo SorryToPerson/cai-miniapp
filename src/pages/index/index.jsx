@@ -65,7 +65,7 @@ function Index() {
     ];
 
     const timeInterval = getTimeDiffStr(
-      startTime,
+      time,
       dayjs().format("YYYY-MM-DD HH:mm:ss")
     );
     setTime(timeInterval);
@@ -93,7 +93,7 @@ function Index() {
     const timer = setInterval(() => {
       if (list[0]) {
         const timeInterval = getTimeDiffStr(
-          list[0].startTime,
+          list[0].endTime,
           dayjs().format("YYYY-MM-DD HH:mm:ss")
         );
         setTime(timeInterval);
@@ -173,7 +173,7 @@ function Index() {
                   <View className="item-ml">
                     {list[i + 1]?.startTime && (
                       <Tag background="#4d6def" color="#fff">
-                        {getTimeDiffStr(list[i + 1].startTime, item.startTime)}
+                        {getTimeDiffStr(list[i + 1].endTime, item.endTime)}
                       </Tag>
                     )}
                   </View>
